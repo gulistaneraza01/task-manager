@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 )

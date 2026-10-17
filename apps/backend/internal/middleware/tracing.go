@@ -6,7 +6,7 @@ import (
 	"github.com/newrelic/go-agent/v3/integrations/nrpkgerrors"
 	"github.com/newrelic/go-agent/v3/newrelic"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
 )
 
 type TracingMiddleware struct {

@@ -200,8 +200,6 @@ linters:
       no-global: "all"
       context: "scope"
 
-
-
   exclusions:
     rules:
       - source: "(noinspection|TODO)"

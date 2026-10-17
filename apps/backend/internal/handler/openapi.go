@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
 
 	"github.com/labstack/echo/v4"
 )

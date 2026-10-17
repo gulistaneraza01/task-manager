@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/config"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/config"
 	"github.com/newrelic/go-agent/v3/integrations/logcontext-v2/zerologWriter"
 	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/rs/zerolog"

@@ -3,9 +3,9 @@ package handler
 import (
 	"time"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/middleware"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/validation"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/middleware"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/validation"
 	"github.com/labstack/echo/v4"
 	"github.com/newrelic/go-agent/v3/integrations/nrpkgerrors"
 	"github.com/newrelic/go-agent/v3/newrelic"

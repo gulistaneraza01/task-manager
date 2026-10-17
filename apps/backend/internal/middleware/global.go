@@ -3,9 +3,9 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/errs"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/sqlerr"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/errs"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/sqlerr"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pkg/errors"

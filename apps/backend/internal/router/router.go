@@ -3,10 +3,10 @@ package router
 import (
 	"net/http"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/handler"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/middleware"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/service"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/handler"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/middleware"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/service"
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"golang.org/x/time/rate"

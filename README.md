@@ -18,7 +18,7 @@ A production-ready monorepo template for building scalable web applications with
 ## Project Structure
 
 ```
-go-boilerplate/
+go-task-manager/
 ├── apps/backend/          # Go backend application
 ├── packages/         # Frontend packages (React, Vue, etc.)
 ├── package.json      # Monorepo configuration
@@ -40,8 +40,8 @@ go-boilerplate/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/gulistaneraza01/go-boilerplate-echo.git
-cd go-boilerplate
+git clone https://github.com/gulistaneraza01/go-task-manager-echo.git
+cd go-task-manager
 ```
 
 2. Install dependencies:
@@ -105,20 +105,20 @@ bun lint               # Lint all packages
 
 ### Environment Variables
 
-The backend uses environment variables prefixed with `BOILERPLATE_`. Key variables include:
+The backend uses environment variables prefixed with `TASK_MANAGER_`. Key variables include:
 
-- `BOILERPLATE_DATABASE_*` - PostgreSQL connection settings
-- `BOILERPLATE_SERVER_*` - Server configuration
-- `BOILERPLATE_AUTH_*` - Authentication settings
-- `BOILERPLATE_REDIS_JOB.*` / `BOILERPLATE_REDIS_CACHE.*` - Redis for background jobs / cache
-- `BOILERPLATE_EMAIL_*` - Email service configuration
-- `BOILERPLATE_OBSERVABILITY_*` - Monitoring settings
+- `TASK_MANAGER_DATABASE_*` - PostgreSQL connection settings
+- `TASK_MANAGER_SERVER_*` - Server configuration
+- `TASK_MANAGER_AUTH_*` - Authentication settings
+- `TASK_MANAGER_REDIS_JOB.*` / `TASK_MANAGER_REDIS_CACHE.*` - Redis for background jobs / cache
+- `TASK_MANAGER_EMAIL_*` - Email service configuration
+- `TASK_MANAGER_OBSERVABILITY_*` - Monitoring settings
 
 See `apps/backend/.env.example` for a complete list.
 
 ## Architecture
 
-This boilerplate follows clean architecture principles:
+This task-manager follows clean architecture principles:
 
 - **Handlers**: HTTP request/response handling
 - **Services**: Business logic implementation

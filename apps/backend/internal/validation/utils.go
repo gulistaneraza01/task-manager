@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/errs"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/errs"
 	"github.com/labstack/echo/v4"
 )
 

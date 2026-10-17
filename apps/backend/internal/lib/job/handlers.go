@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/config"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/lib/email"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/config"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/lib/email"
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog"
 )

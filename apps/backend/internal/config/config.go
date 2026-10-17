@@ -63,8 +63,8 @@ func LoadConfig() (*Config, error) {
 
 	k := koanf.New(".")
 
-	err := k.Load(env.Provider("BOILERPLATE_", ".", func(s string) string {
-		return strings.ToLower(strings.TrimPrefix(s, "BOILERPLATE_"))
+	err := k.Load(env.Provider("TASK_MANAGER_", ".", func(s string) string {
+		return strings.ToLower(strings.TrimPrefix(s, "TASK_MANAGER_"))
 	}), nil)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("could not load initial env variables")
@@ -90,7 +90,7 @@ func LoadConfig() (*Config, error) {
 	}
 
 	// Override service name and environment from primary config
-	mainConfig.Observability.ServiceName = "boilerplate"
+	mainConfig.Observability.ServiceName = "task-manager"
 	mainConfig.Observability.Environment = mainConfig.Primary.Env
 
 	// Validate observability config

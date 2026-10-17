@@ -6,10 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Bun + Turborepo monorepo. The Go backend lives inside it but is **not** a Turbo workspace — it has its own toolchain (`go`, `task`).
 
-- `apps/backend` — Go 1.26 / Echo v4 API (module `github.com/gulistaneraza01/go-boilerplate-echo`)
+- `apps/backend` — Go 1.26 / Echo v4 API (module `github.com/gulistaneraza01/go-task-manager-echo`)
 - `apps/frontend` — React 19 + Vite + Tailwind v4, Clerk auth, ts-rest client, TanStack Query
-- `packages/zod` — shared zod schemas (`@boilerplate/zod`)
-- `packages/openapi` — ts-rest API contracts + OpenAPI generator (`@boilerplate/openapi`)
+- `packages/zod` — shared zod schemas (`@task-manager/zod`)
+- `packages/openapi` — ts-rest API contracts + OpenAPI generator (`@task-manager/openapi`)
 - `packages/emails` — React Email templates that compile to Go HTML templates
 
 ## Commands
@@ -18,13 +18,13 @@ Bun + Turborepo monorepo. The Go backend lives inside it but is **not** a Turbo 
 
 ```bash
 cp .env.example .env
-task run                       # go run ./cmd/go-boilerplate (needs Postgres + Redis)
+task run                       # go run ./cmd/go-task-manager (needs Postgres + Redis)
 go build ./... && go vet ./...
 golangci-lint run ./...        # config is golangci-lint v2 format; v1 binaries refuse it
 go test ./...
 go test ./internal/<pkg> -run TestName   # single test
 task migrations:new name=add_users       # creates a tern migration
-BOILERPLATE_DB_DSN=postgres://... task migrations:up   # prompts for confirmation
+TASK_MANAGER_DB_DSN=postgres://... task migrations:up   # prompts for confirmation
 task tidy                      # go fmt + go mod tidy + verify
 ```
 
@@ -41,13 +41,13 @@ cd packages/emails && bun run dev         # email preview on :3001
 cd packages/emails && bun run export      # compile templates into apps/backend/templates/emails
 ```
 
-Frontend `dev` waits on `packages/openapi/dist/index.js`, so packages must be built first. The frontend Vite config aliases `@boilerplate/*` directly to package `src/`, so the frontend sees package source edits without a rebuild.
+Frontend `dev` waits on `packages/openapi/dist/index.js`, so packages must be built first. The frontend Vite config aliases `@task-manager/*` directly to package `src/`, so the frontend sees package source edits without a rebuild.
 
 ## Backend architecture
 
-**Wiring (`cmd/go-boilerplate/main.go`)**: `config.LoadConfig` → logger (New Relic) → `database.Migrate` (skipped when `PRIMARY.ENV=local`) → `server.New` (pgx pool, Redis, Asynq job server) → `repository.NewRepositories` → `service.NewServices` → `handler.NewHandlers` → `router.NewRouter`. Each layer is a plain struct of sub-components (`Repositories`, `Services`, `Handlers`, `Middlewares`) built by constructor; a new feature is added by adding a field + constructor call at each layer. `*server.Server` is the shared dependency container (Config, Logger, DB, Redis, Job).
+**Wiring (`cmd/go-task-manager/main.go`)**: `config.LoadConfig` → logger (New Relic) → `database.Migrate` (skipped when `PRIMARY.ENV=local`) → `server.New` (pgx pool, Redis, Asynq job server) → `repository.NewRepositories` → `service.NewServices` → `handler.NewHandlers` → `router.NewRouter`. Each layer is a plain struct of sub-components (`Repositories`, `Services`, `Handlers`, `Middlewares`) built by constructor; a new feature is added by adding a field + constructor call at each layer. `*server.Server` is the shared dependency container (Config, Logger, DB, Redis, Job).
 
-**Config**: env vars only, via koanf with `.` as the path delimiter — names look like `BOILERPLATE_DATABASE.HOST`, `BOILERPLATE_SERVER.PORT` (not underscores). `godotenv/autoload` loads `.env` from CWD. Struct tags in `internal/config/config.go` are validated with `validate:"required"`; a missing required var is fatal at startup. `BOILERPLATE_REDIS_JOB.ADDRESS` (Asynq jobs, `Server.RedisJob`, needs `noeviction`) and `BOILERPLATE_REDIS_CACHE.ADDRESS` (cache, `Server.RedisCache`, LRU/LFU) are separate `rediss://user:pass@host:port` URLs — eviction policy is per instance, so don't point both at one LRU instance.
+**Config**: env vars only, via koanf with `.` as the path delimiter — names look like `TASK_MANAGER_DATABASE.HOST`, `TASK_MANAGER_SERVER.PORT` (not underscores). `godotenv/autoload` loads `.env` from CWD. Struct tags in `internal/config/config.go` are validated with `validate:"required"`; a missing required var is fatal at startup. `TASK_MANAGER_REDIS_JOB.ADDRESS` (Asynq jobs, `Server.RedisJob`, needs `noeviction`) and `TASK_MANAGER_REDIS_CACHE.ADDRESS` (cache, `Server.RedisCache`, LRU/LFU) are separate `rediss://user:pass@host:port` URLs — eviction policy is per instance, so don't point both at one LRU instance.
 
 **Handlers**: wrap typed handlers with `handler.Handle[Req, Res](h, fn, status, &Req{})` (also `HandleNoContent`, `HandleFile`) from `internal/handler/base.go`. `Req` must implement `validation.Validatable` (`Validate() error`); the wrapper binds, validates, logs, and adds New Relic attributes. Use `middleware.GetLogger(c)` for the request-scoped logger (carries request_id, user_id, trace context).
 
@@ -88,6 +88,7 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 **Don't assume. Don't hide confusion. Surface tradeoffs.**
 
 Before implementing:
+
 - State your assumptions explicitly. If uncertain, ask.
 - If multiple interpretations exist, present them - don't pick silently.
 - If a simpler approach exists, say so. Push back when warranted.
@@ -110,12 +111,14 @@ Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, sim
 **Touch only what you must. Clean up only your own mess.**
 
 When editing existing code:
+
 - Don't "improve" adjacent code, comments, or formatting.
 - Don't refactor things that aren't broken.
 - Match existing style, even if you'd do it differently.
 - If you notice unrelated dead code, mention it - don't delete it.
 
 When your changes create orphans:
+
 - Remove imports/variables/functions that YOUR changes made unused.
 - Don't remove pre-existing dead code unless asked.
 
@@ -126,11 +129,13 @@ The test: Every changed line should trace directly to the user's request.
 **Define success criteria. Loop until verified.**
 
 Transform tasks into verifiable goals:
+
 - "Add validation" → "Write tests for invalid inputs, then make them pass"
 - "Fix the bug" → "Write a test that reproduces it, then make it pass"
 - "Refactor X" → "Ensure tests pass before and after"
 
 For multi-step tasks, state a brief plan:
+
 ```
 1. [Step] → verify: [check]
 2. [Step] → verify: [check]

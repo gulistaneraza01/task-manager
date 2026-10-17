@@ -3,8 +3,8 @@ package middleware
 import (
 	"context"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/logger"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/logger"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
 	"github.com/labstack/echo/v4"
 	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/rs/zerolog"

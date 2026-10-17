@@ -1,8 +1,9 @@
-# go-boilerplate-echo — core
+# go-task-manager-echo — core
 
 Bun + Turborepo monorepo; Go backend lives inside but is NOT a turbo/bun workspace (own toolchain: `go`, `task`).
 
 ## Source map
+
 - `apps/backend` — Go/Echo REST API. Layering, wiring, config, errors, jobs, DB: `mem:backend/core`
 - `apps/frontend` — React 19 + Vite SPA; `packages/{zod,openapi,emails}` shared TS packages. Package roles, contract→docs flow, email template pipeline, zod pin: `mem:js/core`
 - Stack/version pins and why they can't be bumped: `mem:tech_stack`
@@ -11,6 +12,7 @@ Bun + Turborepo monorepo; Go backend lives inside but is NOT a turbo/bun workspa
 - Verification before calling a task done: `mem:task_completion`
 
 ## Project-wide invariants
+
 - Backend must run with CWD=`apps/backend` (reads `.env` and `templates/emails/` relative to CWD).
 - Go handlers are NOT generated from the ts-rest contracts; contract (`packages/openapi`) and Go routes are kept in sync by hand.
 - Generated artifacts are committed: `apps/backend/static/openapi.json` (from `packages/openapi` gen) and `apps/backend/templates/emails/*.html` (from `packages/emails` export). Edit the sources, regenerate, commit output.

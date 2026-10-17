@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/config"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/database"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/config"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/database"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"

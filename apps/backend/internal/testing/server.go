@@ -3,9 +3,9 @@ package testing
 import (
 	"time"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/config"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/database"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/config"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/database"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
 	"github.com/rs/zerolog"
 )
 

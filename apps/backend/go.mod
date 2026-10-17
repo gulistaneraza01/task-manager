@@ -1,4 +1,4 @@
-module github.com/gulistaneraza01/go-boilerplate-echo
+module github.com/gulistaneraza01/go-task-manager-echo
 
 go 1.26.0
 

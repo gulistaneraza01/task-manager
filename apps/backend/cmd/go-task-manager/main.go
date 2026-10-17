@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/config"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/database"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/handler"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/logger"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/repository"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/router"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/server"
-	"github.com/gulistaneraza01/go-boilerplate-echo/internal/service"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/config"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/database"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/handler"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/logger"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/repository"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/router"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/service"
 )
 
 const DefaultContextTimeout = 30
