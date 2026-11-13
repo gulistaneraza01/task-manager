@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS todos (
   priority todo_priority NOT NULL DEFAULT 'medium',
   due_date timestamptz,
   completed_at timestamptz,
-  metadata jsonb,
+  metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
   sort_order serial,
   category_id uuid references categories (id),
   parent_todo_id uuid references todos (id) ON DELETE CASCADE CONSTRAINT no_self_parent CHECK (

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS document_stores (
   file_name text NOT NULL,
   file_size bigint NOT NULL check (file_size > 0),
   file_type text NOT NULL,
+  metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
   created_at timestamptz NOT NULL DEFAULT now (),
   updated_at timestamptz NOT NULL DEFAULT now (),
   CONSTRAINT uq_document_stores_bucket_key UNIQUE (bucket, key)
