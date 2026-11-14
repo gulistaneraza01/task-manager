@@ -1,5 +1,5 @@
 -- status enum
-CREATE TYPE todo_status AS ENUM ('draft', 'progress', 'done');
+CREATE TYPE todo_status AS ENUM ('draft', 'active', 'completed', 'archived');
 
 -- priority enum
 CREATE TYPE todo_priority AS ENUM ('low', 'medium', 'high');
