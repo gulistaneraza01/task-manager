@@ -9,6 +9,6 @@ import (
 type Category struct {
 	model.Base
 	Name   string    `json:"name" db:"name"`
-	UserID uuid.UUID `json:"user_id" db:"user_id"`
+	UserID uuid.UUID `json:"userId" db:"user_id"`
 	Color  string    `json:"color" db:"color"`
 }
