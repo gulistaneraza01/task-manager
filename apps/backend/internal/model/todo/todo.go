@@ -61,3 +61,12 @@ type PopulatedTodo struct {
 	Comments    []comment.Comment              `json:"comments" db:"comments"`
 	Attachments []document_store.DocumentStore `json:"attachments" db:"attachments"`
 }
+
+type TodoStats struct {
+	Total     int `json:"total"`
+	Draft     int `json:"draft"`
+	Active    int `json:"active"`
+	Completed int `json:"completed"`
+	Archived  int `json:"archived"`
+	Overdue   int `json:"overdue"`
+}

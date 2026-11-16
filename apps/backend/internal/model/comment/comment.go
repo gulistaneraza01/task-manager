@@ -11,5 +11,5 @@ type Comment struct {
 	TodoID   uuid.UUID  `json:"todoId" db:"todo_id"`
 	UserID   uuid.UUID  `json:"userId" db:"user_id"`
 	Content  string     `json:"content" db:"content"`
-	ParentID *uuid.UUID `json:"parentId" db:"parent_id"`
+	ParentID *uuid.UUID `json:"parentCommentId" db:"parent_comment_id"`
 }
