@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
+	"github.com/gulistaneraza01/go-task-manager-echo/internal/errs"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model/todo"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
@@ -239,4 +241,147 @@ func (r *TodoRepository) GetAllTodos(ctx context.Context, userID string, query *
 		Limit:      *query.Limit,
 		TotalPages: (total + *query.Limit - 1) / *query.Limit,
 	}, nil
+}
+
+// UpdateTodo updates a todo by ID and user ID
+func (r *TodoRepository) UpdateTodo(ctx context.Context, userID string, payload *todo.UpdateTodoPayload) (*todo.Todo, error) {
+	stmt := `UPDATE todos SET`
+	args := pgx.NamedArgs{
+		"user_id": userID,
+		"todo_id": payload.ID,
+	}
+
+	setClauses := []string{}
+
+	if payload.Title != nil {
+		setClauses = append(setClauses, "title = @title")
+		args["title"] = *payload.Title
+	}
+
+	if payload.Description != nil {
+		setClauses = append(setClauses, "description = @description")
+		args["description"] = *payload.Description
+	}
+
+	if payload.Priority != nil {
+		setClauses = append(setClauses, "priority = @priority")
+		args["priority"] = *payload.Priority
+	}
+
+	if payload.DueDate != nil {
+		setClauses = append(setClauses, "due_date = @due_date")
+		args["due_date"] = *payload.DueDate
+	}
+
+	if payload.CategoryID != nil {
+		setClauses = append(setClauses, "category_id = @category_id")
+		args["category_id"] = *payload.CategoryID
+	}
+
+	if payload.ParentTodoID != nil {
+		setClauses = append(setClauses, "parent_todo_id = @parent_todo_id")
+		args["parent_todo_id"] = *payload.ParentTodoID
+	}
+
+	if payload.Metadata != nil {
+		setClauses = append(setClauses, "metadata = @metadata")
+		args["metadata"] = *payload.Metadata
+	}
+
+	if payload.Status != nil {
+		setClauses = append(setClauses, "status = @status")
+		args["status"] = *payload.Status
+
+		//auto-set completed_at when status is completed
+		if *payload.Status == todo.StatusCompleted {
+			setClauses = append(setClauses, "completed_at = @completed_at")
+			args["completed_at"] = time.Now()
+		} else {
+			setClauses = append(setClauses, "completed_at = NULL")
+		}
+	}
+
+	if len(setClauses) == 0 {
+		return nil, errs.NewBadRequestError("no field to update", false, nil, nil, nil)
+	}
+
+	stmt += " " + strings.Join(setClauses, ", ")
+	stmt += " WHERE id = @todo_id AND user_id = @user_id RETURNING *"
+
+	row, err := r.server.DB.Pool.Query(ctx, stmt, args)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update todo user_id: %s %w", userID, err)
+	}
+
+	updatedTodo, err := pgx.CollectOneRow(row, pgx.RowToStructByName[todo.Todo])
+	if err != nil {
+		return nil, fmt.Errorf("failed to collect updated todo: %w", err)
+	}
+
+	return &updatedTodo, nil
+}
+
+// DeleteTodo deletes a todo by ID and user ID
+func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID string) error {
+	stmt := `DELETE FROM todos WHERE id = @todo_id AND user_id = @user_id`
+
+	result, err := r.server.DB.Pool.Exec(ctx, stmt, pgx.NamedArgs{"user_id": userID, "todo_id": todoID})
+	if err != nil {
+		return fmt.Errorf("failed to delete todo: %w", err)
+	}
+
+	if result.RowsAffected() == 0 {
+		code := "TODO_NOT_FOUND"
+		return errs.NewNotFoundError("todo not found", false, &code)
+	}
+
+	return nil
+}
+
+// GetTodoStat retrieves task statistics for a user
+func (r *TodoRepository) GetTodoStat(ctx context.Context, userID string) (*todo.TodoStats, error) {
+	stmt := `
+		SELECT
+			COUNT(*) AS total,
+			COUNT(CASE WHEN status='draft' THEN 1 END) AS draft,
+			COUNT(CASE WHEN status='active' THEN 1 END) AS active,
+			COUNT(CASE WHEN status='completed' THEN 1 END) AS completed,
+			COUNT(CASE WHEN status='archived' THEN 1 END) AS archived,
+			COUNT(CASE WHEN due_date<NOW() AND status!='completed' THEN 1 END) AS overdue
+		FROM
+			todos
+		WHERE
+			user_id=@user_id
+	`
+
+	row, err := r.server.DB.Pool.Query(ctx, stmt, pgx.NamedArgs{"user_id": userID})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get todo stats user_id: %s %w", userID, err)
+	}
+
+	stats, err := pgx.CollectOneRow(row, pgx.RowToStructByName[todo.TodoStats])
+	if err != nil {
+		return nil, fmt.Errorf("failed to collect todo stats user_id: %s %w", userID, err)
+	}
+
+	return &stats, nil
+}
+
+// IsTodoExists checks if a todo exists for a user
+func (r *TodoRepository) IsTodoExists(ctx context.Context, userID string, todoID string) (bool, error) {
+	stmt := `SELECT EXISTS (
+		SELECT 1 FROM todos
+		WHERE id = @id AND user_id = @user_id
+	)`
+
+	var exists bool
+	err := r.server.DB.Pool.QueryRow(ctx, stmt, pgx.NamedArgs{
+		"id":      todoID,
+		"user_id": userID,
+	}).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("failed to check todo existence: %w", err)
+	}
+
+	return exists, nil
 }
