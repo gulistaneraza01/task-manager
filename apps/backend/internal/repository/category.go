@@ -23,7 +23,7 @@ func NewCategoryRepository(server *server.Server) *CategoryRepository {
 }
 
 // CreateCategory creates a new category
-func (r *CategoryRepository) CreateCategory(ctx context.Context, userUUID uuid.UUID, payload category.CreateCategoryPayload) (*category.Category, error) {
+func (r *CategoryRepository) CreateCategory(ctx context.Context, userUUID uuid.UUID, payload *category.CreateCategoryPayload) (*category.Category, error) {
 	stmt := `
 	    INSERT INTO categories (name, user_id, color)
 	    VALUES (@name, @user_id, @color)
@@ -69,7 +69,7 @@ func (r *CategoryRepository) GetCategory(ctx context.Context, categoryID uuid.UU
 }
 
 // GetCategories gets all categories for a user
-func (r *CategoryRepository) GetCategories(ctx context.Context, userID uuid.UUID, payload category.GetAllCategoryQuery) (*model.PaginatedResponse[category.Category], error) {
+func (r *CategoryRepository) GetCategories(ctx context.Context, userID uuid.UUID, payload *category.GetAllCategoryQuery) (*model.PaginatedResponse[category.Category], error) {
 	stmt := `SELECT * FROM categories`
 	args := pgx.NamedArgs{"user_id": userID}
 
@@ -145,7 +145,7 @@ func (r *CategoryRepository) GetCategories(ctx context.Context, userID uuid.UUID
 }
 
 // UpdateCategory updates a category by ID and user ID
-func (r *CategoryRepository) UpdateCategory(ctx context.Context, userID uuid.UUID, categoryID uuid.UUID, payload category.UpdateCategoryPayload) (*category.Category, error) {
+func (r *CategoryRepository) UpdateCategory(ctx context.Context, userID uuid.UUID, categoryID uuid.UUID, payload *category.UpdateCategoryPayload) (*category.Category, error) {
 	stmt := `UPDATE categories SET`
 	args := pgx.NamedArgs{
 		"user_id": userID,
