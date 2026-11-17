@@ -89,7 +89,7 @@ func (r *CommentRepository) GetCommentByID(ctx context.Context, userID uuid.UUID
 }
 
 // UpdateComment updates a comment for a todo
-func (r *CommentRepository) UpdateComment(ctx context.Context, userID uuid.UUID, commentID uuid.UUID, payload comment.UpdateCommentPayload) (*comment.Comment, error) {
+func (r *CommentRepository) UpdateComment(ctx context.Context, userID uuid.UUID, commentID uuid.UUID, payload *comment.UpdateCommentPayload) (*comment.Comment, error) {
 	stmt := `UPDATE comments
 	SET content = @content
 	WHERE id = @comment_id AND user_id = @user_id

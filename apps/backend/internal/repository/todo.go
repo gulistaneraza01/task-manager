@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/errs"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model/todo"
@@ -23,7 +24,7 @@ func NewTodoRepository(server *server.Server) *TodoRepository {
 }
 
 // CreateTodo creates a new task item
-func (r *TodoRepository) CreateTodo(ctx context.Context, userId string, payload *todo.CreateTodoPayload) (*todo.Todo, error) {
+func (r *TodoRepository) CreateTodo(ctx context.Context, userId uuid.UUID, payload *todo.CreateTodoPayload) (*todo.Todo, error) {
 
 	stmt := `INSERT INTO todos
 	(user_id, title, description, priority, due_date, category_id, parent_todo_id, metadata)
@@ -51,7 +52,7 @@ func (r *TodoRepository) CreateTodo(ctx context.Context, userId string, payload 
 }
 
 // GetTodoByID retrieves a task item by its ID
-func (r *TodoRepository) GetTodoByID(ctx context.Context, userID string, todoID string) (*todo.PopulatedTodo, error) {
+func (r *TodoRepository) GetTodoByID(ctx context.Context, userID uuid.UUID, todoID uuid.UUID) (*todo.PopulatedTodo, error) {
 
 	stmt := `SELECT t.*, CASE WHEN c.id IS NOT NULL THEN to_jsonb(camel(c)) ELSE NULL END AS category,
 		COALESCE(jsonb_agg(to_jsonb(camel(child)) ORDER BY child.sort_order ASC, child.created_at ASC) FILTER (WHERE child.id IS NOT NULL), '[]'::JSONB) AS children,
@@ -83,8 +84,8 @@ func (r *TodoRepository) GetTodoByID(ctx context.Context, userID string, todoID 
 	return &todoItem, nil
 }
 
-// checkTodoExists checks if a task exists for a user
-func (r *TodoRepository) CheckTodoExists(ctx context.Context, userID string, todoID string) (*todo.Todo, error) {
+// CheckTodoExists checks if a task exists for a user
+func (r *TodoRepository) CheckTodoExists(ctx context.Context, userID uuid.UUID, todoID uuid.UUID) (*todo.Todo, error) {
 
 	stmt := `SELECT * FROM todos WHERE id = @id AND user_id = @user_id`
 
@@ -101,8 +102,8 @@ func (r *TodoRepository) CheckTodoExists(ctx context.Context, userID string, tod
 	return &todoItem, nil
 }
 
-// GetTodos retrieves all tasks for a user
-func (r *TodoRepository) GetAllTodos(ctx context.Context, userID string, query *todo.GetAllTodosQuery) (*model.PaginatedResponse[todo.PopulatedTodo], error) {
+// GetAllTodos retrieves all tasks for a user
+func (r *TodoRepository) GetAllTodos(ctx context.Context, userID uuid.UUID, query *todo.GetAllTodosQuery) (*model.PaginatedResponse[todo.PopulatedTodo], error) {
 	stmt := `
 	SELECT
 		t.*,
@@ -244,7 +245,7 @@ func (r *TodoRepository) GetAllTodos(ctx context.Context, userID string, query *
 }
 
 // UpdateTodo updates a todo by ID and user ID
-func (r *TodoRepository) UpdateTodo(ctx context.Context, userID string, payload *todo.UpdateTodoPayload) (*todo.Todo, error) {
+func (r *TodoRepository) UpdateTodo(ctx context.Context, userID uuid.UUID, payload *todo.UpdateTodoPayload) (*todo.Todo, error) {
 	stmt := `UPDATE todos SET`
 	args := pgx.NamedArgs{
 		"user_id": userID,
@@ -322,7 +323,7 @@ func (r *TodoRepository) UpdateTodo(ctx context.Context, userID string, payload 
 }
 
 // DeleteTodo deletes a todo by ID and user ID
-func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID string) error {
+func (r *TodoRepository) DeleteTodo(ctx context.Context, userID uuid.UUID, todoID uuid.UUID) error {
 	stmt := `DELETE FROM todos WHERE id = @todo_id AND user_id = @user_id`
 
 	result, err := r.server.DB.Pool.Exec(ctx, stmt, pgx.NamedArgs{"user_id": userID, "todo_id": todoID})
@@ -339,7 +340,7 @@ func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID s
 }
 
 // GetTodoStat retrieves task statistics for a user
-func (r *TodoRepository) GetTodoStat(ctx context.Context, userID string) (*todo.TodoStats, error) {
+func (r *TodoRepository) GetTodoStat(ctx context.Context, userID uuid.UUID) (*todo.TodoStats, error) {
 	stmt := `
 		SELECT
 			COUNT(*) AS total,
@@ -368,7 +369,7 @@ func (r *TodoRepository) GetTodoStat(ctx context.Context, userID string) (*todo.
 }
 
 // IsTodoExists checks if a todo exists for a user
-func (r *TodoRepository) IsTodoExists(ctx context.Context, userID string, todoID string) (bool, error) {
+func (r *TodoRepository) IsTodoExists(ctx context.Context, userID uuid.UUID, todoID uuid.UUID) (bool, error) {
 	stmt := `SELECT EXISTS (
 		SELECT 1 FROM todos
 		WHERE id = @id AND user_id = @user_id
