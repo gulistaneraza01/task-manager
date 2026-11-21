@@ -27,7 +27,7 @@ func NewTodoService(server *server.Server, todoRepo *repository.TodoRepository,
 	}
 }
 
-func (s *TodoService) CreateTodo(ctx echo.Context, userID uuid.UUID, payload *todo.CreateTodoPayload) (*todo.Todo, error) {
+func (s *TodoService) CreateTodo(ctx echo.Context, userID string, payload *todo.CreateTodoPayload) (*todo.Todo, error) {
 	logger := middleware.GetLogger(ctx)
 
 	// Validate parent todo exists and belongs to user (if provided)
@@ -48,7 +48,7 @@ func (s *TodoService) CreateTodo(ctx echo.Context, userID uuid.UUID, payload *to
 
 	// Validate category exists and belongs to user (if provided)
 	if payload.CategoryID != nil {
-		_, err := s.categoryRepo.GetCategory(ctx.Request().Context(), userID, *payload.CategoryID)
+		_, err := s.categoryRepo.GetCategory(ctx.Request().Context(), *payload.CategoryID, userID)
 		if err != nil {
 			logger.Error().Err(err).Msg("category validation failed")
 			return nil, err
@@ -79,7 +79,7 @@ func (s *TodoService) CreateTodo(ctx echo.Context, userID uuid.UUID, payload *to
 	return todoItem, nil
 }
 
-func (s *TodoService) GetTodo(ctx echo.Context, userID uuid.UUID, todoID uuid.UUID) (*todo.PopulatedTodo, error) {
+func (s *TodoService) GetTodo(ctx echo.Context, userID string, todoID uuid.UUID) (*todo.PopulatedTodo, error) {
 	logger := middleware.GetLogger(ctx)
 
 	todoItem, err := s.todoRepo.GetTodoByID(ctx.Request().Context(), userID, todoID)
@@ -91,7 +91,7 @@ func (s *TodoService) GetTodo(ctx echo.Context, userID uuid.UUID, todoID uuid.UU
 	return todoItem, nil
 }
 
-func (s *TodoService) GetAllTodos(ctx echo.Context, userID uuid.UUID, query *todo.GetAllTodosQuery) (*model.PaginatedResponse[todo.PopulatedTodo], error) {
+func (s *TodoService) GetAllTodos(ctx echo.Context, userID string, query *todo.GetAllTodosQuery) (*model.PaginatedResponse[todo.PopulatedTodo], error) {
 	logger := middleware.GetLogger(ctx)
 
 	todos, err := s.todoRepo.GetAllTodos(ctx.Request().Context(), userID, query)
@@ -103,7 +103,7 @@ func (s *TodoService) GetAllTodos(ctx echo.Context, userID uuid.UUID, query *tod
 	return todos, nil
 }
 
-func (s *TodoService) UpdateTodo(ctx echo.Context, userID uuid.UUID, todoID uuid.UUID, payload *todo.UpdateTodoPayload) (*todo.Todo, error) {
+func (s *TodoService) UpdateTodo(ctx echo.Context, userID string, todoID uuid.UUID, payload *todo.UpdateTodoPayload) (*todo.Todo, error) {
 	logger := middleware.GetLogger(ctx)
 
 	//validate parant
@@ -131,7 +131,7 @@ func (s *TodoService) UpdateTodo(ctx echo.Context, userID uuid.UUID, todoID uuid
 
 	// Validate category exists and belongs to user (if provided)
 	if payload.CategoryID != nil {
-		_, err := s.categoryRepo.GetCategory(ctx.Request().Context(), userID, *payload.CategoryID)
+		_, err := s.categoryRepo.GetCategory(ctx.Request().Context(), *payload.CategoryID, userID)
 		if err != nil {
 			logger.Error().Err(err).Msg("category validation failed")
 			return nil, err
@@ -165,7 +165,7 @@ func (s *TodoService) UpdateTodo(ctx echo.Context, userID uuid.UUID, todoID uuid
 	return updatedTodo, nil
 }
 
-func (s *TodoService) GetTodoStat(ctx echo.Context, userID uuid.UUID) (*todo.TodoStats, error) {
+func (s *TodoService) GetTodoStat(ctx echo.Context, userID string) (*todo.TodoStats, error) {
 	logger := middleware.GetLogger(ctx)
 
 	stats, err := s.todoRepo.GetTodoStat(ctx.Request().Context(), userID)
@@ -177,7 +177,7 @@ func (s *TodoService) GetTodoStat(ctx echo.Context, userID uuid.UUID) (*todo.Tod
 	return stats, nil
 }
 
-func (s *TodoService) DeleteTodo(ctx echo.Context, userID uuid.UUID, todoID uuid.UUID) error {
+func (s *TodoService) DeleteTodo(ctx echo.Context, userID string, todoID uuid.UUID) error {
 	logger := middleware.GetLogger(ctx)
 
 	// Validate todo exists

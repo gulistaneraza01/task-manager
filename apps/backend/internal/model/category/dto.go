@@ -62,7 +62,7 @@ func (q *GetAllCategoryQuery) Validate() error {
 
 // GetCategoryQuery represents the query for getting a category
 type GetCategoryQuery struct {
-	ID *uuid.UUID `param:"id" validate:"required uuid"`
+	ID uuid.UUID `param:"id" validate:"required uuid"`
 }
 
 func (q *GetCategoryQuery) Validate() error {

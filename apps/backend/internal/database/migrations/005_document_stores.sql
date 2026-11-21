@@ -1,7 +1,7 @@
 --document_stores table
 CREATE TABLE IF NOT EXISTS document_stores (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  user_id uuid NOT NULL,
+  user_id text NOT NULL,
   bucket varchar(255) NOT NULL,
   key varchar(255) NOT NULL,
   url text NOT NULL UNIQUE,

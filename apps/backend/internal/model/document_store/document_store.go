@@ -1,20 +1,19 @@
 package document_store
 
 import (
-	"github.com/google/uuid"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model"
 )
 
 type DocumentStore struct {
 	model.Base
-	UserID   uuid.UUID `json:"userId" db:"user_id"`
-	Bucket   string    `json:"bucket" db:"bucket"`
-	Key      string    `json:"key" db:"key"`
-	URL      string    `json:"url" db:"url"`
-	FileName string    `json:"fileName" db:"file_name"`
-	FileSize int64     `json:"fileSize" db:"file_size"`
-	FileType string    `json:"fileType" db:"file_type"`
-	Metadata MetaData  `json:"metadata" db:"metadata"`
+	UserID   string   `json:"userId" db:"user_id"`
+	Bucket   string   `json:"bucket" db:"bucket"`
+	Key      string   `json:"key" db:"key"`
+	URL      string   `json:"url" db:"url"`
+	FileName string   `json:"fileName" db:"file_name"`
+	FileSize int64    `json:"fileSize" db:"file_size"`
+	FileType string   `json:"fileType" db:"file_type"`
+	Metadata MetaData `json:"metadata" db:"metadata"`
 }
 
 type MetaData struct {

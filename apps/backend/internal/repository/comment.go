@@ -20,7 +20,7 @@ func NewCommentRepository(server *server.Server) *CommentRepository {
 }
 
 // AddComment to Task
-func (r *CommentRepository) AddComment(ctx context.Context, userID uuid.UUID, todoID uuid.UUID, payload *comment.CreateCommentPayload) (*comment.Comment, error) {
+func (r *CommentRepository) AddComment(ctx context.Context, userID string, todoID uuid.UUID, payload *comment.CreateCommentPayload) (*comment.Comment, error) {
 
 	stmt := `INSERT INTO comments
 		(todo_id, user_id, content, parent_comment_id)
@@ -46,7 +46,7 @@ func (r *CommentRepository) AddComment(ctx context.Context, userID uuid.UUID, to
 }
 
 // GetCommentsByTodoID for user todo
-func (r *CommentRepository) GetCommentsByTodoID(ctx context.Context, userID uuid.UUID, todoID uuid.UUID) ([]comment.Comment, error) {
+func (r *CommentRepository) GetCommentsByTodoID(ctx context.Context, userID string, todoID uuid.UUID) ([]comment.Comment, error) {
 	stmt := `SELECT * FROM comments
 	WHERE todo_id = @todo_id AND user_id = @user_id
 	ORDER BY created_at ASC`
@@ -68,7 +68,7 @@ func (r *CommentRepository) GetCommentsByTodoID(ctx context.Context, userID uuid
 }
 
 // GetCommentByID gets a single comment detail
-func (r *CommentRepository) GetCommentByID(ctx context.Context, userID uuid.UUID, commentID uuid.UUID) (*comment.Comment, error) {
+func (r *CommentRepository) GetCommentByID(ctx context.Context, userID string, commentID uuid.UUID) (*comment.Comment, error) {
 	stmt := `SELECT * FROM comments
 	WHERE id = @comment_id AND user_id = @user_id`
 
@@ -89,7 +89,7 @@ func (r *CommentRepository) GetCommentByID(ctx context.Context, userID uuid.UUID
 }
 
 // UpdateComment updates a comment for a todo
-func (r *CommentRepository) UpdateComment(ctx context.Context, userID uuid.UUID, commentID uuid.UUID, payload *comment.UpdateCommentPayload) (*comment.Comment, error) {
+func (r *CommentRepository) UpdateComment(ctx context.Context, userID string, commentID uuid.UUID, payload *comment.UpdateCommentPayload) (*comment.Comment, error) {
 	stmt := `UPDATE comments
 	SET content = @content
 	WHERE id = @comment_id AND user_id = @user_id
@@ -113,7 +113,7 @@ func (r *CommentRepository) UpdateComment(ctx context.Context, userID uuid.UUID,
 }
 
 // DeleteComment deletes the single comment
-func (r *CommentRepository) DeleteComment(ctx context.Context, userID uuid.UUID, commentID uuid.UUID) error {
+func (r *CommentRepository) DeleteComment(ctx context.Context, userID string, commentID uuid.UUID) error {
 
 	stmt := `
 		DELETE FROM comments
@@ -137,7 +137,7 @@ func (r *CommentRepository) DeleteComment(ctx context.Context, userID uuid.UUID,
 }
 
 // CheckcommentExists
-func (r *CommentRepository) CheckCommentExist(ctx context.Context, userID uuid.UUID, commentID uuid.UUID) (*comment.Comment, error) {
+func (r *CommentRepository) CheckCommentExist(ctx context.Context, userID string, commentID uuid.UUID) (*comment.Comment, error) {
 
 	stmt := `
 		Select * FROM comments
@@ -158,7 +158,7 @@ func (r *CommentRepository) CheckCommentExist(ctx context.Context, userID uuid.U
 }
 
 // IsCommentExists checks if a comment exists for a user
-func (r *CommentRepository) IsCommentExists(ctx context.Context, userID uuid.UUID, commentID uuid.UUID) (bool, error) {
+func (r *CommentRepository) IsCommentExists(ctx context.Context, userID string, commentID uuid.UUID) (bool, error) {
 	stmt := `SELECT EXISTS (
 		SELECT 1 FROM comments
 		WHERE id = @comment_id AND user_id = @user_id
