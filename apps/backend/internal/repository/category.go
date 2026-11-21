@@ -23,7 +23,7 @@ func NewCategoryRepository(server *server.Server) *CategoryRepository {
 }
 
 // CreateCategory creates a new category
-func (r *CategoryRepository) CreateCategory(ctx context.Context, userUUID uuid.UUID, payload *category.CreateCategoryPayload) (*category.Category, error) {
+func (r *CategoryRepository) CreateCategory(ctx context.Context, userID string, payload *category.CreateCategoryPayload) (*category.Category, error) {
 	stmt := `
 	    INSERT INTO categories (name, user_id, color)
 	    VALUES (@name, @user_id, @color)
@@ -32,7 +32,7 @@ func (r *CategoryRepository) CreateCategory(ctx context.Context, userUUID uuid.U
 
 	row, err := r.server.DB.Pool.Query(ctx, stmt, pgx.NamedArgs{
 		"name":    payload.Name,
-		"user_id": userUUID,
+		"user_id": userID,
 		"color":   payload.Color,
 	})
 	if err != nil {
@@ -49,7 +49,7 @@ func (r *CategoryRepository) CreateCategory(ctx context.Context, userUUID uuid.U
 }
 
 // GetCategory gets a category by id
-func (r *CategoryRepository) GetCategory(ctx context.Context, categoryID uuid.UUID, userID uuid.UUID) (*category.Category, error) {
+func (r *CategoryRepository) GetCategory(ctx context.Context, categoryID uuid.UUID, userID string) (*category.Category, error) {
 	stmt := `SELECT * FROM categories WHERE id = @category_id AND user_id = @user_id`
 
 	row, err := r.server.DB.Pool.Query(ctx, stmt, pgx.NamedArgs{
@@ -69,7 +69,7 @@ func (r *CategoryRepository) GetCategory(ctx context.Context, categoryID uuid.UU
 }
 
 // GetCategories gets all categories for a user
-func (r *CategoryRepository) GetCategories(ctx context.Context, userID uuid.UUID, payload *category.GetAllCategoryQuery) (*model.PaginatedResponse[category.Category], error) {
+func (r *CategoryRepository) GetCategories(ctx context.Context, userID string, payload *category.GetAllCategoryQuery) (*model.PaginatedResponse[category.Category], error) {
 	stmt := `SELECT * FROM categories`
 	args := pgx.NamedArgs{"user_id": userID}
 
@@ -145,7 +145,7 @@ func (r *CategoryRepository) GetCategories(ctx context.Context, userID uuid.UUID
 }
 
 // UpdateCategory updates a category by ID and user ID
-func (r *CategoryRepository) UpdateCategory(ctx context.Context, userID uuid.UUID, categoryID uuid.UUID, payload *category.UpdateCategoryPayload) (*category.Category, error) {
+func (r *CategoryRepository) UpdateCategory(ctx context.Context, userID string, categoryID uuid.UUID, payload *category.UpdateCategoryPayload) (*category.Category, error) {
 	stmt := `UPDATE categories SET`
 	args := pgx.NamedArgs{
 		"user_id": userID,
@@ -184,7 +184,7 @@ func (r *CategoryRepository) UpdateCategory(ctx context.Context, userID uuid.UUI
 }
 
 // DeleteCategory deletes a category by ID and user ID
-func (r *CategoryRepository) DeleteCategory(ctx context.Context, userID uuid.UUID, categoryID uuid.UUID) error {
+func (r *CategoryRepository) DeleteCategory(ctx context.Context, userID string, categoryID uuid.UUID) error {
 	stmt := `DELETE FROM categories WHERE id = @id AND user_id = @user_id`
 
 	row, err := r.server.DB.Pool.Exec(ctx, stmt, pgx.NamedArgs{

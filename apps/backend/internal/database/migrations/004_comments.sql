@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS comments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   todo_id uuid NOT NULL REFERENCES todos (id) ON DELETE CASCADE,
-  user_id uuid NOT NULL,
+  user_id text NOT NULL,
   content text NOT NULL,
   parent_comment_id uuid REFERENCES comments (id) ON DELETE CASCADE CONSTRAINT no_self_reference CHECK (
     parent_comment_id IS DISTINCT

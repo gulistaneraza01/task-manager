@@ -42,7 +42,7 @@ type Todo struct {
 	SortOrder   int        `json:"sortOrder" db:"sort_order"`
 	CategoryID  *uuid.UUID `json:"categoryId" db:"category_id"`
 	ParentID    *uuid.UUID `json:"parentTodoId" db:"parent_todo_id"`
-	UserID      uuid.UUID  `json:"userId" db:"user_id"`
+	UserID      string     `json:"userId" db:"user_id"`
 }
 
 // MetaData represents the metadata of a task

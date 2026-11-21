@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS categories (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   name varchar(100) NOT NULL,
-  user_id uuid NOT NULL,
+  user_id text NOT NULL,
   color char(7) NOT NULL DEFAULT '#6B7280',
   created_at timestamptz NOT NULL DEFAULT now (),
   updated_at timestamptz NOT NULL DEFAULT now ()

@@ -23,7 +23,7 @@ func NewCommentService(server *server.Server, commentRepo *repository.CommentRep
 	}
 }
 
-func (s *CommentService) CreateComment(ctx echo.Context, userID uuid.UUID, payload *comment.CreateCommentPayload) (*comment.Comment, error) {
+func (s *CommentService) CreateComment(ctx echo.Context, userID string, payload *comment.CreateCommentPayload) (*comment.Comment, error) {
 
 	logger := middleware.GetLogger(ctx)
 
@@ -52,7 +52,7 @@ func (s *CommentService) CreateComment(ctx echo.Context, userID uuid.UUID, paylo
 	return commentItem, nil
 }
 
-func (s *CommentService) GetComment(ctx echo.Context, userID uuid.UUID, commentID uuid.UUID) (*comment.Comment, error) {
+func (s *CommentService) GetComment(ctx echo.Context, userID string, commentID uuid.UUID) (*comment.Comment, error) {
 	logger := middleware.GetLogger(ctx)
 
 	comment, err := s.commentRepo.GetCommentByID(ctx.Request().Context(), userID, commentID)
@@ -64,7 +64,7 @@ func (s *CommentService) GetComment(ctx echo.Context, userID uuid.UUID, commentI
 	return comment, nil
 }
 
-func (s *CommentService) GetCommentsByTodoID(ctx echo.Context, userID uuid.UUID, todoID uuid.UUID) ([]comment.Comment, error) {
+func (s *CommentService) GetCommentsByTodoID(ctx echo.Context, userID string, todoID uuid.UUID) ([]comment.Comment, error) {
 	logger := middleware.GetLogger(ctx)
 
 	// Validate todo exists and belongs to user
@@ -83,7 +83,7 @@ func (s *CommentService) GetCommentsByTodoID(ctx echo.Context, userID uuid.UUID,
 	return comments, nil
 }
 
-func (s *CommentService) UpdateComment(ctx echo.Context, userID uuid.UUID, commentID uuid.UUID, payload *comment.UpdateCommentPayload) (*comment.Comment, error) {
+func (s *CommentService) UpdateComment(ctx echo.Context, userID string, commentID uuid.UUID, payload *comment.UpdateCommentPayload) (*comment.Comment, error) {
 	logger := middleware.GetLogger(ctx)
 
 	//validate comment exits
@@ -109,7 +109,7 @@ func (s *CommentService) UpdateComment(ctx echo.Context, userID uuid.UUID, comme
 	return comment, nil
 }
 
-func (s *CommentService) DeleteComment(ctx echo.Context, userID uuid.UUID, commentID uuid.UUID) error {
+func (s *CommentService) DeleteComment(ctx echo.Context, userID string, commentID uuid.UUID) error {
 	logger := middleware.GetLogger(ctx)
 
 	// Validate comment exists

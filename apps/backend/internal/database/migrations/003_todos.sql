@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS todos (
     FROM
       id
   ),
-  user_id uuid NOT NULL,
+  user_id text NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now (),
   updated_at timestamptz NOT NULL DEFAULT now ()
 );

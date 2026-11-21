@@ -22,7 +22,7 @@ func NewCategoryService(server *server.Server, categoryRepo *repository.Category
 	}
 }
 
-func (s *CategoryService) CreateCategory(ctx echo.Context, userID uuid.UUID, payload *category.CreateCategoryPayload) (*category.Category, error) {
+func (s *CategoryService) CreateCategory(ctx echo.Context, userID string, payload *category.CreateCategoryPayload) (*category.Category, error) {
 	logger := middleware.GetLogger(ctx)
 
 	CategoryItem, err := s.categoryRepo.CreateCategory(ctx.Request().Context(), userID, payload)
@@ -43,7 +43,7 @@ func (s *CategoryService) CreateCategory(ctx echo.Context, userID uuid.UUID, pay
 	return CategoryItem, nil
 }
 
-func (s *CategoryService) GetCategory(ctx echo.Context, categoryID uuid.UUID, userID uuid.UUID) (*category.Category, error) {
+func (s *CategoryService) GetCategory(ctx echo.Context, categoryID uuid.UUID, userID string) (*category.Category, error) {
 	logger := middleware.GetLogger(ctx)
 
 	categoryItem, err := s.categoryRepo.GetCategory(ctx.Request().Context(), categoryID, userID)
@@ -55,7 +55,7 @@ func (s *CategoryService) GetCategory(ctx echo.Context, categoryID uuid.UUID, us
 	return categoryItem, nil
 }
 
-func (s *CategoryService) GetCategories(ctx echo.Context, userID uuid.UUID, query *category.GetAllCategoryQuery) (*model.PaginatedResponse[category.Category], error) {
+func (s *CategoryService) GetCategories(ctx echo.Context, userID string, query *category.GetAllCategoryQuery) (*model.PaginatedResponse[category.Category], error) {
 	logger := middleware.GetLogger(ctx)
 
 	categories, err := s.categoryRepo.GetCategories(ctx.Request().Context(), userID, query)
@@ -67,7 +67,7 @@ func (s *CategoryService) GetCategories(ctx echo.Context, userID uuid.UUID, quer
 	return categories, nil
 }
 
-func (s *CategoryService) UpdateCategory(ctx echo.Context, categoryID uuid.UUID, userID uuid.UUID, payload *category.UpdateCategoryPayload) (*category.Category, error) {
+func (s *CategoryService) UpdateCategory(ctx echo.Context, categoryID uuid.UUID, userID string, payload *category.UpdateCategoryPayload) (*category.Category, error) {
 	logger := middleware.GetLogger(ctx)
 
 	_, err := s.categoryRepo.GetCategory(ctx.Request().Context(), categoryID, userID)
@@ -94,7 +94,7 @@ func (s *CategoryService) UpdateCategory(ctx echo.Context, categoryID uuid.UUID,
 	return categoryItem, nil
 }
 
-func (s *CategoryService) DeleteCategory(ctx echo.Context, categoryID uuid.UUID, userID uuid.UUID) error {
+func (s *CategoryService) DeleteCategory(ctx echo.Context, categoryID uuid.UUID, userID string) error {
 	logger := middleware.GetLogger(ctx)
 
 	_, err := s.categoryRepo.GetCategory(ctx.Request().Context(), categoryID, userID)
