@@ -35,6 +35,18 @@ func (h *CommentHandler) CreateComment(c echo.Context) error {
 	)(c)
 }
 
+func (h *CommentHandler) GetComment(c echo.Context) error {
+	return Handle(
+		h.Handler,
+		func(c echo.Context, req *comment.GetCommentPayload) (*comment.Comment, error) {
+			userID := middleware.GetUserID(c)
+			return h.commentService.GetComment(c, userID, req.ID)
+		},
+		http.StatusOK,
+		&comment.GetCommentPayload{},
+	)(c)
+}
+
 func (h *CommentHandler) GetCommentsByTodoID(c echo.Context) error {
 	return Handle(
 		h.Handler,

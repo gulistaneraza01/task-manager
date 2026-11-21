@@ -5,6 +5,7 @@ import (
 
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/handler"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/middleware"
+	v1 "github.com/gulistaneraza01/go-task-manager-echo/internal/router/v1"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/server"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/service"
 	"github.com/labstack/echo/v4"
@@ -58,7 +59,8 @@ func NewRouter(s *server.Server, h *handler.Handlers, services *service.Services
 	registerSystemRoutes(router, h)
 
 	// register versioned routes
-	router.Group("/api/v1")
+	v1Routes := router.Group("/api/v1")
+	v1.RegisterV1Routes(v1Routes, h, middlewares)
 
 	return router
 }
