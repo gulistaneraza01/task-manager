@@ -9,8 +9,8 @@ import (
 // Create comment for task
 
 type CreateCommentPayload struct {
-	TodoID   uuid.UUID  `json:"todoId" validate:"required uuid"`
-	Content  string     `json:"content" validate:"required min=1 max=1000"`
+	TodoID   uuid.UUID  `json:"todoId" validate:"required,uuid"`
+	Content  string     `json:"content" validate:"required,min=1,max=1000"`
 	ParentID *uuid.UUID `json:"parentId" validate:"uuid"`
 }
 
@@ -23,7 +23,7 @@ func (c *CreateCommentPayload) Validate() error {
 
 // GetAllCommentsForTaskPayload represents the payload for getting all comments for a task
 type GetAllCommentsForTaskPayload struct {
-	TodoID uuid.UUID `param:"todoId" validate:"required uuid"`
+	TodoID uuid.UUID `param:"todoId" validate:"required,uuid"`
 }
 
 func (p *GetAllCommentsForTaskPayload) Validate() error {
@@ -35,7 +35,7 @@ func (p *GetAllCommentsForTaskPayload) Validate() error {
 
 // GetCommentPayload represents the payload for getting a comment
 type GetCommentPayload struct {
-	ID uuid.UUID `param:"id" validate:"required uuid"`
+	ID uuid.UUID `param:"id" validate:"required,uuid"`
 }
 
 func (p *GetCommentPayload) Validate() error {
@@ -47,8 +47,8 @@ func (p *GetCommentPayload) Validate() error {
 
 // UpdateCommentPayload represents the payload for updating a comment
 type UpdateCommentPayload struct {
-	ID      uuid.UUID `param:"id" validate:"required uuid"`
-	Content string    `json:"content" validate:"required min=1 max=1000"`
+	ID      uuid.UUID `param:"id" validate:"required,uuid"`
+	Content string    `json:"content" validate:"required,min=1,max=1000"`
 }
 
 func (p *UpdateCommentPayload) Validate() error {
@@ -60,7 +60,7 @@ func (p *UpdateCommentPayload) Validate() error {
 
 // DeleteCommentPayload represents the payload for deleting a comment
 type DeleteCommentPayload struct {
-	ID uuid.UUID `param:"id" validate:"required uuid"`
+	ID uuid.UUID `param:"id" validate:"required,uuid"`
 }
 
 func (p *DeleteCommentPayload) Validate() error {

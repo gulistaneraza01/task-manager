@@ -7,7 +7,6 @@ import (
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model/category"
 	"github.com/gulistaneraza01/go-task-manager-echo/internal/model/comment"
-	"github.com/gulistaneraza01/go-task-manager-echo/internal/model/document_store"
 )
 
 // Status represents the status of a task
@@ -56,10 +55,9 @@ type MetaData struct {
 // PopulatedTodo represents a task with its related data
 type PopulatedTodo struct {
 	Todo
-	Category    *category.Category             `json:"category" db:"category"`
-	Children    []Todo                         `json:"children" db:"children"`
-	Comments    []comment.Comment              `json:"comments" db:"comments"`
-	Attachments []document_store.DocumentStore `json:"attachments" db:"attachments"`
+	Category *category.Category `json:"category" db:"category"`
+	Children []Todo             `json:"children" db:"children"`
+	Comments []comment.Comment  `json:"comments" db:"comments"`
 }
 
 type TodoStats struct {

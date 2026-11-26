@@ -9,8 +9,8 @@ import (
 
 // CreateCategoryPayload represents the payload for creating a new category
 type CreateCategoryPayload struct {
-	Name  string `json:"name" validate:"required min=1 max=255"`
-	Color string `json:"color" validate:"required hexcolor"`
+	Name  string `json:"name" validate:"required,min=1,max=255"`
+	Color string `json:"color" validate:"required,hexcolor"`
 }
 
 func (c *CreateCategoryPayload) Validate() error {
@@ -22,11 +22,11 @@ func (c *CreateCategoryPayload) Validate() error {
 
 // GetAllCategoryQuery represents the query for getting all categories
 type GetAllCategoryQuery struct {
-	Page   *int    `query:"page" validate:"min=1"`
-	Limit  *int    `query:"limit" validate:"min=1,max=100"`
-	Sort   *string `query:"sort" validate:"omitempty oneof=name color createdAt updatedAt"`
-	Order  *string `query:"order" validate:"omitempty oneof=asc desc"`
-	Search *string `query:"search" validate:"omitempty min=1 max=255"`
+	Page   *int    `query:"page" validate:"omitempty,min=1"`
+	Limit  *int    `query:"limit" validate:"omitempty,min=1,max=100"`
+	Sort   *string `query:"sort" validate:"omitempty,oneof=name color createdAt updatedAt"`
+	Order  *string `query:"order" validate:"omitempty,oneof=asc desc"`
+	Search *string `query:"search" validate:"omitempty,min=1,max=255"`
 }
 
 func (q *GetAllCategoryQuery) Validate() error {
@@ -62,7 +62,7 @@ func (q *GetAllCategoryQuery) Validate() error {
 
 // GetCategoryQuery represents the query for getting a category
 type GetCategoryQuery struct {
-	ID uuid.UUID `param:"id" validate:"required uuid"`
+	ID uuid.UUID `param:"id" validate:"required,uuid"`
 }
 
 func (q *GetCategoryQuery) Validate() error {
@@ -74,9 +74,9 @@ func (q *GetCategoryQuery) Validate() error {
 
 // UpdateCategoryPayload represents the payload for updating a category
 type UpdateCategoryPayload struct {
-	ID    uuid.UUID `param:"id" validate:"required uuid"`
-	Name  *string   `json:"name" validate:"omitempty min=1 max=255"`
-	Color *string   `json:"color" validate:"omitempty hexcolor"`
+	ID    uuid.UUID `param:"id" validate:"required,uuid"`
+	Name  *string   `json:"name" validate:"omitempty,min=1,max=255"`
+	Color *string   `json:"color" validate:"omitempty,hexcolor"`
 }
 
 func (c *UpdateCategoryPayload) Validate() error {
@@ -88,7 +88,7 @@ func (c *UpdateCategoryPayload) Validate() error {
 
 // DeleteCategoryPayload represents the payload for deleting a category
 type DeleteCategoryPayload struct {
-	ID uuid.UUID `param:"id" validate:"required uuid"`
+	ID uuid.UUID `param:"id" validate:"required,uuid"`
 }
 
 func (c *DeleteCategoryPayload) Validate() error {
