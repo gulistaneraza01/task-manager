@@ -1,8 +1,8 @@
 import { extendZodWithOpenApi } from "@anatine/zod-openapi";
+import { generateOpenApi } from "@ts-rest/open-api";
 import { z } from "zod";
 
 extendZodWithOpenApi(z);
-import { generateOpenApi } from "@ts-rest/open-api";
 
 import { apiContract } from "./contracts/index.js";
 
@@ -15,7 +15,7 @@ export type OperationMapper = NonNullable<
 >["operationMapper"];
 
 const hasSecurity = (
-  metadata: unknown
+  metadata: unknown,
 ): metadata is { openApiSecurity: SecurityRequirementObject[] } => {
   return (
     !!metadata && typeof metadata === "object" && "openApiSecurity" in metadata
@@ -43,7 +43,7 @@ export const OpenAPI = Object.assign(
       },
       servers: [
         {
-          url: "http://localhost:8080",
+          url: "http://localhost:8080/api",
           description: "Local Server",
         },
       ],
@@ -51,7 +51,7 @@ export const OpenAPI = Object.assign(
     {
       operationMapper,
       setOperationId: true,
-    }
+    },
   ),
   {
     components: {
@@ -68,5 +68,5 @@ export const OpenAPI = Object.assign(
         },
       },
     },
-  }
+  },
 );
